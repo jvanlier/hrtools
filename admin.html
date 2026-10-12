@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stageplaatsen – beheer</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#f4f4f4;color:#222;line-height:1.4}
+header{background:#c8102e;color:#fff;padding:1rem 1.5rem}
+header h1{margin:0;font-size:1.4rem}
+main{max-width:1300px;margin:0 auto;padding:1rem;display:grid;grid-template-columns:360px 1fr;gap:1rem;align-items:start}
+section{background:#fff;border-radius:10px;padding:1rem 1.25rem;box-shadow:0 1px 4px #0002}
+h2{font-size:1.1rem;margin:0 0 .5rem}
+label{display:block;font-weight:600;font-size:.85rem;margin:.6rem 0 .2rem}
+.hint{font-weight:400;opacity:.7}
+input,select,button{font:inherit;padding:.45rem .6rem;border-radius:6px;border:1px solid #bbb;width:100%}
+button{width:auto;cursor:pointer;background:#c8102e;color:#fff;border:0;font-weight:600}
+button.sec{background:#fff;color:#c8102e;border:1px solid #c8102e}
+.knoppen{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1rem}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th,td{text-align:left;padding:.4rem .5rem;border-bottom:1px solid #e3e3e3;vertical-align:top}
+th{background:#fafafa;position:sticky;top:0}
+td.acties{white-space:nowrap}
+td.acties button{padding:.2rem .5rem;font-size:.8rem}
+.warn{color:#b35c00}
+#melding{min-height:1.3em;font-size:.9rem;margin:.5rem 0 0}
+.balk{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-bottom:.75rem}
+.balk select{width:auto}
+.tabel-wrap{max-height:70vh;overflow:auto}
+:focus-visible{outline:3px solid #ffbf00;outline-offset:2px}
+@media(max-width:900px){main{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><h1>Stageplaatsen – beheer</h1></header>
+<main>
+  <section aria-labelledby="form-titel">
+    <h2 id="form-titel">Stageplaats toevoegen</h2>
+    <form id="form" autocomplete="off">
+      <input type="hidden" id="id">
+      <label for="stageplaats">Stageplaats</label>
+      <input id="stageplaats" required>
+      <label for="stagebegeleider">Stagebegeleider</label>
+      <input id="stagebegeleider">
+      <label for="postcode">Postcode</label>
+      <input id="postcode" required pattern="\s*[1-9][0-9]{3}\s?[A-Za-z]{2}\s*" placeholder="1234 AB" title="Nederlandse postcode, bijv. 3011 AA">
+      <label for="plaats">Plaats</label>
+      <input id="plaats" required>
+      <label for="mailadres">Mailadres</label>
+      <input id="mailadres" type="email">
+      <label for="telefoonnummer">Telefoonnummer</label>
+      <input id="telefoonnummer" type="tel">
+      <label for="semesters">Semesters <span class="hint">(komma-gescheiden, bijv. 5, 6)</span></label>
+      <input id="semesters">
+      <label for="specialisatie">Specialisatie</label>
+      <input id="specialisatie" list="spec-lijst">
+      <datalist id="spec-lijst"></datalist>
+      <div class="knoppen">
+        <button type="submit" id="opslaan">Toevoegen</button>
+        <button type="button" class="sec" id="annuleer" hidden>Annuleren</button>
+      </div>
+      <p id="melding" role="status" aria-live="polite"></p>
+    </form>
+  </section>
+
+  <section aria-labelledby="lijst-titel">
+    <h2 id="lijst-titel">Stageplaatsen (<span id="aantal">0</span>)</h2>
+    <div class="balk">
+      <button type="button" class="sec" id="json-open">JSON openen…</button>
+      <input type="file" id="json-file" accept=".json,application/json" hidden>
+      <button type="button" class="sec" id="json-save">JSON opslaan</button>
+      <button type="button" class="sec" id="geo">Ontbrekende locaties ophalen</button>
+      <span style="flex:1"></span>
+      <label for="ontwerp" style="margin:0">Ontwerp</label>
+      <select id="ontwerp"></select>
+      <button type="button" class="sec" id="voorbeeld">Voorbeeld</button>
+      <button type="button" id="export">Studentenpagina exporteren</button>
+    </div>
+    <div class="tabel-wrap">
+      <table>
+        <thead><tr><th>Stageplaats</th><th>Begeleider</th><th>Postcode / plaats</th><th>Contact</th><th>Semesters</th><th>Specialisatie</th><th></th></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <p class="hint">Gegevens worden automatisch in deze browser bewaard. Sla regelmatig op als JSON-bestand als back-up of om te delen.</p>
+  </section>
+</main>
+
+<script src="student.js"></script>
+<script>
+'use strict';
+const OPSLAG = 'stageplaatsen.v1';
+const VELDEN = ['stageplaats', 'stagebegeleider', 'postcode', 'plaats', 'mailadres', 'telefoonnummer', 'semesters', 'specialisatie'];
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+let data = [];
+try { data = JSON.parse(localStorage.getItem(OPSLAG)) || []; } catch (e) { console.error(e); }
+
+const melding = (t) => { $('#melding').textContent = t; };
+const bewaar = () => localStorage.setItem(OPSLAG, JSON.stringify(data));
+const normPostcode = (p) => p.replace(/\s+/g, '').toUpperCase().replace(/^(\d{4})([A-Z]{2})$/, '$1 $2');
+
+async function geocode(d) {
+  const params = new URLSearchParams({ q: d.postcode.replace(/\s+/g, '') + ' ' + d.plaats, rows: '1', fl: 'centroide_ll', fq: 'type:(postcode OR woonplaats)' });
+  try {
+    const res = await fetch('https://api.pdok.nl/bzk/locatieserver/search/v3_1/free?' + params, { signal: AbortSignal.timeout(6000) });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const doc = (await res.json()).response.docs[0];
+    const m = doc && /POINT\(([\d.]+) ([\d.]+)\)/.exec(doc.centroide_ll);
+    if (m) { d.lon = +m[1]; d.lat = +m[2]; return true; }
+  } catch (e) { console.warn('Locatie ophalen mislukt', e); }
+  return false;
+}
+
+function render() {
+  $('#aantal').textContent = data.length;
+  $('#tbody').innerHTML = data.map((d) => `<tr>
+    <td>${esc(d.stageplaats)}</td>
+    <td>${esc(d.stagebegeleider)}</td>
+    <td>${esc(d.postcode)} ${esc(d.plaats)}${d.lat == null ? ' <span class="warn" title="Geen locatie: afstand zoeken werkt niet voor deze stageplaats">⚠</span>' : ''}</td>
+    <td>${esc(d.mailadres)}<br>${esc(d.telefoonnummer)}</td>
+    <td>${esc((d.semesters || []).join(', '))}</td>
+    <td>${esc(d.specialisatie)}</td>
+    <td class="acties"><button type="button" class="sec" data-bewerk="${esc(d.id)}">Bewerken</button> <button type="button" class="sec" data-verwijder="${esc(d.id)}">Verwijderen</button></td>
+  </tr>`).join('') || '<tr><td colspan="7">Nog geen stageplaatsen. Voeg er een toe of open een JSON-bestand.</td></tr>';
+  $('#spec-lijst').innerHTML = [...new Set(data.map((d) => d.specialisatie).filter(Boolean))].map((s) => `<option value="${esc(s)}">`).join('');
+}
+
+function resetForm() {
+  $('#form').reset();
+  $('#id').value = '';
+  $('#form-titel').textContent = 'Stageplaats toevoegen';
+  $('#opslaan').textContent = 'Toevoegen';
+  $('#annuleer').hidden = true;
+}
+
+$('#form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const d = {};
+  VELDEN.forEach((v) => { d[v] = $('#' + v).value.trim(); });
+  d.postcode = normPostcode(d.postcode);
+  d.semesters = d.semesters.split(',').map((s) => s.trim()).filter(Boolean);
+  const id = $('#id').value;
+  const oud = data.find((x) => x.id === id);
+  d.id = id || (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()));
+  // Coördinaten hergebruiken als de locatie niet is gewijzigd.
+  if (oud && oud.postcode === d.postcode && oud.plaats === d.plaats && oud.lat != null) { d.lat = oud.lat; d.lon = oud.lon; }
+  else { melding('Locatie ophalen…'); await geocode(d); }
+  if (oud) data[data.indexOf(oud)] = d; else data.push(d);
+  bewaar(); render(); resetForm();
+  melding(d.lat != null ? 'Opgeslagen.' : 'Opgeslagen, maar locatie niet gevonden (geen internet of onbekende postcode). Probeer later "Ontbrekende locaties ophalen".');
+});
+$('#annuleer').addEventListener('click', () => { resetForm(); melding(''); });
+
+$('#tbody').addEventListener('click', (e) => {
+  const bid = e.target.dataset.bewerk, vid = e.target.dataset.verwijder;
+  if (bid) {
+    const d = data.find((x) => x.id === bid);
+    $('#id').value = d.id;
+    VELDEN.forEach((v) => { $('#' + v).value = v === 'semesters' ? (d.semesters || []).join(', ') : (d[v] || ''); });
+    $('#form-titel').textContent = 'Stageplaats bewerken';
+    $('#opslaan').textContent = 'Wijzigingen opslaan';
+    $('#annuleer').hidden = false;
+    $('#stageplaats').focus();
+  } else if (vid) {
+    const d = data.find((x) => x.id === vid);
+    if (confirm(`"${d.stageplaats}" verwijderen?`)) { data = data.filter((x) => x.id !== vid); bewaar(); render(); }
+  }
+});
+
+function download(naam, inhoud, type) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([inhoud], { type }));
+  a.download = naam;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+$('#json-open').addEventListener('click', () => $('#json-file').click());
+$('#json-file').addEventListener('change', async (e) => {
+  const f = e.target.files[0];
+  if (!f) return;
+  try {
+    const inhoud = JSON.parse(await f.text());
+    if (!Array.isArray(inhoud) || inhoud.some((d) => typeof d !== 'object' || !d || !d.stageplaats)) throw new Error('Verwacht een lijst met stageplaatsen.');
+    if (data.length && !confirm(`Huidige ${data.length} stageplaatsen vervangen door ${inhoud.length} uit "${f.name}"?`)) return;
+    data = inhoud.map((d) => Object.assign({}, d, { id: d.id || (crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2)), semesters: Array.isArray(d.semesters) ? d.semesters.map(String) : [] }));
+    bewaar(); render(); melding(`${data.length} stageplaatsen geladen.`);
+  } catch (err) {
+    alert('Kan bestand niet lezen: ' + err.message);
+  } finally { e.target.value = ''; }
+});
+$('#json-save').addEventListener('click', () => download('stageplaatsen.json', JSON.stringify(data, null, 2), 'application/json'));
+
+$('#geo').addEventListener('click', async () => {
+  const todo = data.filter((d) => d.lat == null);
+  let ok = 0;
+  for (const d of todo) { melding(`Locaties ophalen… ${ok}/${todo.length}`); if (await geocode(d)) ok++; }
+  bewaar(); render(); melding(`${ok} van ${todo.length} ontbrekende locaties gevonden.`);
+});
+
+Object.entries(StudentPage.DESIGNS).forEach(([k, v]) => $('#ontwerp').add(new Option(v.naam, k)));
+const studentHtml = () => StudentPage.build(data.map(({ id, ...rest }) => rest), $('#ontwerp').value);
+$('#export').addEventListener('click', () => {
+  const zonder = data.filter((d) => d.lat == null).length;
+  if (zonder && !confirm(`${zonder} stageplaats(en) hebben geen locatie en verschijnen niet bij zoeken op afstand. Toch exporteren?`)) return;
+  download('stageplaatsen.html', studentHtml(), 'text/html');
+});
+$('#voorbeeld').addEventListener('click', () => window.open(URL.createObjectURL(new Blob([studentHtml()], { type: 'text/html' }))));
+
+render();
+</script>
+</body>
+</html>

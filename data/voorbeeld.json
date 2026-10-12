@@ -1,0 +1,149 @@
+[
+  {
+    "stageplaats": "Erasmus MC",
+    "stagebegeleider": "Dr. A. de Vries",
+    "postcode": "3015 GD",
+    "plaats": "Rotterdam",
+    "mailadres": "stage@erasmusmc.nl",
+    "telefoonnummer": "010-7040704",
+    "semesters": [
+      "5",
+      "6"
+    ],
+    "specialisatie": "Zorg & Technologie",
+    "lon": 4.46806897,
+    "lat": 51.91094323
+  },
+  {
+    "stageplaats": "Gemeente Rotterdam",
+    "stagebegeleider": "M. Jansen",
+    "postcode": "3011 AD",
+    "plaats": "Rotterdam",
+    "mailadres": "stages@rotterdam.nl",
+    "telefoonnummer": "14 010",
+    "semesters": [
+      "3",
+      "4"
+    ],
+    "specialisatie": "Publieke sector",
+    "lon": 4.47912816,
+    "lat": 51.9228326
+  },
+  {
+    "stageplaats": "Coolblue",
+    "stagebegeleider": "S. Bakker",
+    "postcode": "3014 DA",
+    "plaats": "Rotterdam",
+    "mailadres": "stage@coolblue.nl",
+    "telefoonnummer": "010-7988999",
+    "semesters": [
+      "5"
+    ],
+    "specialisatie": "Software Engineering",
+    "lon": 4.46940671,
+    "lat": 51.92242094
+  },
+  {
+    "stageplaats": "TU Delft Lab",
+    "stagebegeleider": "Ir. P. Smit",
+    "postcode": "2628 CD",
+    "plaats": "Delft",
+    "mailadres": "p.smit@tudelft.nl",
+    "telefoonnummer": "015-2789111",
+    "semesters": [
+      "7",
+      "8"
+    ],
+    "specialisatie": "Onderzoek",
+    "lon": 4.37481497,
+    "lat": 51.99757406
+  },
+  {
+    "stageplaats": "Gemeente Den Haag",
+    "stagebegeleider": "K. Visser",
+    "postcode": "2511 BT",
+    "plaats": "Den Haag",
+    "mailadres": "stage@denhaag.nl",
+    "telefoonnummer": "14 070",
+    "semesters": [
+      "3",
+      "4",
+      "5"
+    ],
+    "specialisatie": "Publieke sector",
+    "lon": 4.31645627,
+    "lat": 52.07736854
+  },
+  {
+    "stageplaats": "Albert Heijn HQ",
+    "stagebegeleider": "L. Mulder",
+    "postcode": "1506 EA",
+    "plaats": "Zaandam",
+    "mailadres": "stage@ah.nl",
+    "telefoonnummer": "075-6599111",
+    "semesters": [
+      "6"
+    ],
+    "specialisatie": "Data & AI",
+    "lon": 4.82273,
+    "lat": 52.44064965
+  },
+  {
+    "stageplaats": "Rabobank Utrecht",
+    "stagebegeleider": "J. de Boer",
+    "postcode": "3521 CB",
+    "plaats": "Utrecht",
+    "mailadres": "stages@rabobank.nl",
+    "telefoonnummer": "030-2160000",
+    "semesters": [
+      "5",
+      "6"
+    ],
+    "specialisatie": "Data & AI",
+    "lon": 5.10977592,
+    "lat": 52.08572546
+  },
+  {
+    "stageplaats": "Havenbedrijf Rotterdam",
+    "stagebegeleider": "T. Meijer",
+    "postcode": "3072 AP",
+    "plaats": "Rotterdam",
+    "mailadres": "stage@portofrotterdam.com",
+    "telefoonnummer": "010-2521010",
+    "semesters": [
+      "7"
+    ],
+    "specialisatie": "Logistiek",
+    "lon": 4.48850815,
+    "lat": 51.90661247
+  },
+  {
+    "stageplaats": "Philips Eindhoven",
+    "stagebegeleider": "R. Hendriks",
+    "postcode": "5656 AE",
+    "plaats": "Eindhoven",
+    "mailadres": "stage@philips.com",
+    "telefoonnummer": "040-2791111",
+    "semesters": [
+      "7",
+      "8"
+    ],
+    "specialisatie": "Zorg & Technologie",
+    "lon": 5.45585467,
+    "lat": 51.41206167
+  },
+  {
+    "stageplaats": "Startup Dordrecht",
+    "stagebegeleider": "N. Dekker",
+    "postcode": "3311 JE",
+    "plaats": "Dordrecht",
+    "mailadres": "hallo@startup-ddr.nl",
+    "telefoonnummer": "078-1234567",
+    "semesters": [
+      "5"
+    ],
+    "specialisatie": "Software Engineering",
+    "lon": 4.65527406,
+    "lat": 51.81264486
+  }
+]
