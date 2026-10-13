@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stageplaatsen — handleiding voor de beheerder</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f4f4f4;color:#222;font:1rem/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:#c8102e;color:white;padding:2rem 1rem}
+header>div,main,footer{max-width:1000px;margin:auto}
+h1{font-size:clamp(1.8rem,5vw,2.6rem);line-height:1.2;margin:0 0 .5rem}
+h2{line-height:1.3;margin:2rem 0 1rem}h3{margin:0;font-size:1.15rem;line-height:1.4}
+p{margin:.5rem 0}main{padding:0 1rem 2rem}a{color:#a30d26}header a{color:white}
+nav{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem}
+.note{background:#fff4d9;border-left:5px solid #9c6500;padding:1rem;border-radius:6px;margin:1rem 0}
+.flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:.65rem;align-items:center;margin:1.5rem 0}
+.file{background:white;border:1px solid #ddd;border-radius:12px;padding:1rem;text-align:center}
+.file svg{width:52px;height:60px;display:block;margin:0 auto .5rem}.file strong{display:block}.arrow{font-size:1.8rem;color:#a30d26}
+.steps{list-style:none;padding:0;display:grid;gap:1rem;counter-reset:step}
+.steps>li{counter-increment:step;background:white;border:1px solid #ddd;border-radius:12px;padding:1.25rem;display:grid;grid-template-columns:2.2rem 1fr;gap:1rem;break-inside:avoid}
+.steps>li::before{content:counter(step);border-radius:50%;background:#c8102e;color:white;text-align:center;line-height:2.2rem;height:2.2rem;font-weight:700}
+.example{margin:1rem 0 0;padding:1rem;border:1px solid #ddd;border-radius:8px;background:#fafafa}
+.example-caption{font-size:.85rem;color:#555;margin:0 0 .6rem}.controls{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+.button{display:inline-block;padding:.4rem .8rem;background:#c8102e;color:white;border-radius:6px;font-weight:600}
+.button.secondary{background:white;color:#a30d26;border:1px solid #a30d26}
+.field{background:white;border:1px solid #aaa;border-radius:6px;padding:.4rem .65rem;overflow-wrap:anywhere}
+.pill{border-radius:99px}.example dl{display:grid;grid-template-columns:auto 1fr;gap:.3rem 1rem;margin:0}
+.example dt{font-weight:600}.example dd{margin:0;overflow-wrap:anywhere}.sort{border-top:1px solid #ccc;margin-top:1rem;padding-top:.75rem;justify-content:flex-end}
+.types{display:grid;grid-template-columns:1fr 1fr;gap:1rem}.types section{border-radius:12px;padding:1.25rem;background:white;border-top:4px solid #c8102e}
+.types h3{margin-bottom:.5rem}footer{padding:1rem;font-size:.9rem;border-top:1px solid #ddd}
+:focus-visible{outline:3px solid #ffbf00;outline-offset:3px}
+@media(max-width:650px){.flow{grid-template-columns:1fr}.arrow{text-align:center;transform:rotate(90deg)}.types{grid-template-columns:1fr}.example dl{grid-template-columns:1fr;gap:0}.example dd{margin-bottom:.5rem}.steps>li{padding:1rem;gap:.6rem}}
+@media print{body{background:white;font-size:10pt}header{background:white;color:#222;padding:0 1rem}nav{display:none}main{padding-bottom:0}.button{background:white;color:#222;border:1px solid #777}h2{break-after:avoid}.file,.types section,.note{break-inside:avoid}a{color:#222}}
+</style>
+</head>
+<body>
+<header><div>
+  <h1>Stageplaatsen: voor de beheerder</h1>
+  <p>Open de meegeleverde lijst, pas de gegevens aan en maak de pagina voor studenten.</p>
+  <nav aria-label="In deze handleiding"><a href="#beheer">Stappenplan</a><a href="#bestanden">Welke bestanden zijn er?</a></nav>
+</div></header>
+<main>
+
+  <div class="flow" aria-label="Eerst gegevens openen, daarna aanpassen, dan bewaren en exporteren">
+    <div class="file">
+      <svg viewBox="0 0 52 60" aria-hidden="true"><path d="M7 2h25l13 13v43H7z" fill="#fde8eb" stroke="#a30d26" stroke-width="2"/><path d="M32 2v13h13M15 27h22M15 35h22M15 43h15" fill="none" stroke="#a30d26" stroke-width="2"/></svg>
+      <strong>1. Gegevens openen</strong><span>Laad de meegeleverde lijst</span>
+    </div>
+    <span class="arrow" aria-hidden="true">→</span>
+    <div class="file">
+      <svg viewBox="0 0 52 60" aria-hidden="true"><path d="M7 2h25l13 13v43H7z" fill="#fde8eb" stroke="#a30d26" stroke-width="2"/><path d="M32 2v13h13M16 30l6-6M16 30l6 6M36 30l-6-6M36 30l-6 6" fill="none" stroke="#a30d26" stroke-width="2"/></svg>
+      <strong>2. Aanpassen</strong><span>Voeg toe of bewerk stageplaatsen</span>
+    </div>
+    <span class="arrow" aria-hidden="true">→</span>
+    <div class="file">
+      <svg viewBox="0 0 52 60" aria-hidden="true"><rect x="3" y="8" width="46" height="44" rx="3" fill="#fde8eb" stroke="#a30d26" stroke-width="2"/><path d="M3 19h46M10 30h13v14H10zM29 30h13v14H29z" fill="none" stroke="#a30d26" stroke-width="2"/></svg>
+      <strong>3. Bewaren en delen</strong><span>Sla op en exporteer voor studenten</span>
+    </div>
+  </div>
+
+  <h2 id="beheer">Voor de beheerder</h2>
+  <ol class="steps">
+    <li><div><h3>Open de beheerpagina</h3>
+      <p>Dubbelklik in de ontvangen map op <strong>admin.html</strong>. De pagina opent in je internetbrowser. Vanuit deze handleiding kun je ook <a href="../../admin.html">de beheerpagina openen</a>.</p>
+      <p>Laat <strong>student.js</strong> in dezelfde map staan. Je hoeft dat bestand niet te openen. Je hebt geen website of webserver nodig.</p>
+    </div></li>
+    <li><div><h3>Open eerst het meegeleverde gegevensbestand</h3>
+      <p>Je begint altijd met een bestand waarin de stageplaatsen al zijn ingevuld. Bewaar het ontvangen bestand op je computer. Het heeft een naam die eindigt op <strong>.json</strong>, bijvoorbeeld <strong>stageplaatsen.json</strong>.</p>
+      <p><strong>JSON is hier gewoon een bestand met de lijst stageplaatsen.</strong> Je hoeft het niet zelf te bewerken of met een dubbelklik te openen.</p>
+      <p>Klik op de beheerpagina op <strong>JSON openen…</strong> en kies het meegeleverde bestand. De bestaande stageplaatsen verschijnen in de lijst rechts. Controleer of je de verwachte lijst ziet voordat je iets toevoegt of aanpast.</p>
+      <div class="example"><p class="example-caption">Begin elke werkronde met de juiste lijst</p><div class="controls"><span class="button secondary">JSON openen…</span><span aria-hidden="true">→</span><span class="field">stageplaatsen.json</span><span aria-hidden="true">→</span><span>De stageplaatsen verschijnen in de lijst</span></div></div>
+      <div class="note"><strong>Zie je nog gegevens van een vorige keer?</strong> Bewaar eventueel nog niet opgeslagen wijzigingen eerst met <strong>JSON opslaan</strong>. Het openen van een bestand vervangt de huidige lijst; bevestig dit alleen als je het juiste bestand hebt gekozen.</div>
+      <p>Bij een volgende werkronde open je niet opnieuw de oorspronkelijke lijst, maar jouw <strong>laatst bewaarde versie</strong>. Zo blijven eerdere wijzigingen behouden.</p>
+    </div></li>
+    <li><div><h3>Voeg zo nodig een stageplaats toe</h3>
+      <p>Staat een stageplaats nog niet in de ingelezen lijst? Gebruik dan het formulier links. Vul de stageplaats, stagebegeleider, postcode, plaats, mailadres, telefoonnummer, semesters en specialisatie in. Zet een komma tussen meerdere semesters.</p>
+      <div class="example"><p class="example-caption">Voorbeeld van ingevulde gegevens — niet bedoeld om contact op te nemen</p>
+        <dl><dt>Stageplaats</dt><dd>Voorbeeldpraktijk</dd><dt>Stagebegeleider</dt><dd>Sam de Vries</dd><dt>Postcode / plaats</dt><dd>3011 AA Rotterdam</dd><dt>Mailadres</dt><dd>stage@voorbeeld.invalid</dd><dt>Telefoonnummer</dt><dd>010 000 0000</dd><dt>Semesters</dt><dd>5, 6</dd><dt>Specialisatie</dt><dd>Zorg &amp; Technologie</dd></dl>
+      </div>
+      <p>Klik op <strong>Toevoegen</strong>. De stageplaats verschijnt in de lijst rechts. Voor de locatiebepaling is internet nodig.</p>
+      <p>Zie je een <strong>⚠</strong> bij de postcode? Controleer postcode en plaats. Klik met internetverbinding op <strong>Ontbrekende locaties ophalen</strong>. Zonder locatie kan deze stageplaats niet op afstand worden gevonden.</p>
+    </div></li>
+    <li><div><h3>Pas gegevens aan als dat nodig is</h3>
+      <p>Klik naast de stageplaats op <strong>Bewerken</strong>. Pas de gegevens links aan en klik op <strong>Wijzigingen opslaan</strong>. Met <strong>Verwijderen</strong> haal je een stageplaats uit de lijst; je krijgt eerst een bevestigingsvraag.</p>
+      <div class="example"><p class="example-caption">Zo herken je de knoppen in de lijst</p><div class="controls"><span>Voorbeeldpraktijk</span><span class="button secondary">Bewerken</span><span class="button secondary">Verwijderen</span></div></div>
+    </div></li>
+    <li><div><h3>Bewaar een kopie van je gegevens</h3>
+      <p>Klik op <strong>JSON opslaan</strong>. Je browser bewaart een bestand met de naam <strong>stageplaatsen.json</strong>, meestal in de map <strong>Downloads</strong>.</p>
+      <p>Dit bestand bevat de ingelezen lijst <strong>met jouw wijzigingen</strong>. Bewaar het in een herkenbare map, bijvoorbeeld ‘Stageplaatsen’. Je kunt de kopie een datum geven, bijvoorbeeld <strong>stageplaatsen-2026-10-13.json</strong>. Dit wordt het startbestand voor de volgende werkronde.</p>
+      <div class="example"><p class="example-caption">Bewaren voor jezelf of een collega-beheerder</p><div class="controls"><span class="button secondary">JSON opslaan</span><span aria-hidden="true">→</span><span class="field">stageplaatsen.json</span></div></div>
+      <p>Later verder werken, of op een andere computer? Open <strong>admin.html</strong>, klik op <strong>JSON openen…</strong> en kies jouw laatst bewaarde bestand. De ingelezen lijst vervangt de huidige lijst na bevestiging. Bewaar daarom eerst je huidige werk.</p>
+      <div class="note"><strong>Bewaar na elke wijzigingsronde een nieuwe kopie.</strong> De browser onthoudt de lijst ook, maar dat is geen veilige back-up: bij wissen van browsergegevens of werken in een andere browser kan de lijst ontbreken.</div>
+    </div></li>
+    <li><div><h3>Maak de pagina voor studenten en deel die</h3>
+      <p>Klik op <strong>Voorbeeld</strong> om de studentenpagina te bekijken. Tevreden? Klik op <strong>Studentenpagina exporteren</strong>. Je browser bewaart <strong>stageplaatsen.html</strong>, meestal in Downloads.</p>
+      <div class="example"><p class="example-caption">Dit bestand deel je met studenten</p><div class="controls"><span class="button">Studentenpagina exporteren</span><span aria-hidden="true">→</span><span class="field">stageplaatsen.html</span></div></div>
+      <p>Deel dit ene bestand via jullie gebruikelijke kanaal, bijvoorbeeld als bijlage. Studenten downloaden het en openen het met een dubbelklik. Er zijn geen andere bestanden nodig.</p>
+      <div class="note"><strong>De gedeelde pagina is een momentopname.</strong> Heb je iets gewijzigd? Bewaar je gegevens opnieuw, exporteer een nieuwe studentenpagina en deel die opnieuw. De oude pagina verandert niet vanzelf.</div>
+      <p>Controleer vóór het delen of de contactgegevens met studenten gedeeld mogen worden.</p>
+    </div></li>
+  </ol>
+
+  <h2 id="bestanden">Welk bestand gebruik ik waarvoor?</h2>
+  <div class="types">
+    <section><h3>stageplaatsen.json</h3><p><strong>Voor de beheerder.</strong> Je begint met de meegeleverde lijst. Na je wijzigingen bewaar je een nieuwe versie om de volgende keer te openen of aan een collega-beheerder te geven.</p><p>Open dit bestand via <strong>JSON openen…</strong> op de beheerpagina, niet door erop te dubbelklikken.</p></section>
+    <section><h3>stageplaatsen.html</h3><p><strong>Voor studenten.</strong> Dit is de kant-en-klare pagina om stageplaatsen te bekijken en te zoeken.</p><p>Open dit bestand met een dubbelklik. Het werkt in de browser zonder installatie.</p></section>
+  </div>
+
+  <div class="note"><strong>Internet nodig?</strong> Nieuwe locaties ophalen vraagt internet. Het openen, aanpassen, bewaren en exporteren van de lijst werkt zonder webserver.</div>
+</main>
+<footer>Je kunt deze handleiding afdrukken via het afdrukmenu van je browser (Ctrl+P op Windows, ⌘+P op een Mac).</footer>
+</body>
+</html>

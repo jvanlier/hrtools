@@ -1,15 +1,15 @@
 /*
- * Bouwt de zelfstandige studentenpagina (één HTML-bestand met data + JS + CSS).
- * Wordt gebruikt door admin.html (browser) en scripts/build-mockups.js (Node).
+ * Builds a self-contained student page with embedded data, JavaScript, and CSS.
+ * Used by admin.html in the browser; also available as a CommonJS module.
  */
 (function (root) {
   'use strict';
 
   const BEHEERDER = 'enkoc@hr.nl';
-  // QR-code voor "mailto:enkoc@hr.nl" (vooraf gegenereerd, statisch).
+  // Static, pre-generated QR code for "mailto:enkoc@hr.nl".
   const QR_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 116 116" role="img" aria-label="QR-code: mail naar ' + BEHEERDER + '"><rect width="116" height="116" fill="#fff"/><path transform="scale(4)" stroke="#000" d="M2 2.5h7m3 0h2m2 0h1m3 0h7m-25 1h1m5 0h1m4 0h2m1 0h1m3 0h1m5 0h1m-25 1h1m1 0h3m1 0h1m2 0h1m2 0h3m3 0h1m1 0h3m1 0h1m-25 1h1m1 0h3m1 0h1m1 0h3m1 0h1m2 0h1m2 0h1m1 0h3m1 0h1m-25 1h1m1 0h3m1 0h1m2 0h1m1 0h1m1 0h2m3 0h1m1 0h3m1 0h1m-25 1h1m5 0h1m1 0h2m1 0h2m5 0h1m5 0h1m-25 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-17 1h3m1 0h1m2 0h2m-16 1h2m3 0h1m2 0h2m2 0h2m1 0h1m1 0h2m1 0h1m-21 1h1m1 0h1m4 0h3m2 0h1m1 0h1m2 0h2m2 0h1m1 0h1m-24 1h1m1 0h4m1 0h2m1 0h2m2 0h3m1 0h1m2 0h1m1 0h1m-24 1h1m2 0h1m2 0h1m4 0h2m1 0h1m1 0h5m1 0h1m-24 1h3m3 0h1m1 0h3m2 0h1m1 0h1m2 0h2m1 0h1m1 0h2m-20 1h1m2 0h2m2 0h1m2 0h2m1 0h2m1 0h2m1 0h1m-25 1h5m1 0h1m1 0h3m2 0h1m1 0h2m3 0h3m1 0h1m-23 1h3m3 0h5m4 0h3m1 0h1m1 0h1m-24 1h3m1 0h3m3 0h1m2 0h1m2 0h5m-13 1h1m2 0h3m2 0h1m3 0h2m2 0h1m-25 1h7m4 0h1m1 0h1m2 0h1m1 0h1m1 0h3m1 0h1m-25 1h1m5 0h1m3 0h1m1 0h2m1 0h2m3 0h2m2 0h1m-25 1h1m1 0h3m1 0h1m4 0h1m1 0h9m1 0h2m-25 1h1m1 0h3m1 0h1m2 0h1m1 0h4m2 0h1m2 0h4m-24 1h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m2 0h3m2 0h1m2 0h2m-25 1h1m5 0h1m1 0h1m1 0h1m2 0h1m6 0h1m-21 1h7m3 0h2m1 0h1m2 0h1m2 0h1m4 0h1"/></svg>';
 
-  // ---------- Logica die in de studentenpagina draait (wordt geserialiseerd) ----------
+  // ---------- Student-page runtime (serialized into the export) ----------
   function app() {
     const DATA = JSON.parse(document.getElementById('stage-data').textContent);
     const $ = (s) => document.querySelector(s);
@@ -47,9 +47,9 @@
         const m = doc && /POINT\(([\d.]+) ([\d.]+)\)/.exec(doc.centroide_ll);
         if (m) return { lon: +m[1], lat: +m[2], label: doc.weergavenaam };
       } catch (e) {
-        console.warn('Online locatie zoeken mislukt, probeer offline', e);
+        console.warn('Online location lookup failed; trying offline records', e);
       }
-      // Offline terugval: zoek in de bekende stageplaatsen.
+      // Offline fallback: search the known placement records.
       const nq = norm(q).toUpperCase();
       const hit = DATA.find((d) => d.lat != null && (norm(d.postcode).toUpperCase().startsWith(nq) || norm(d.plaats).toUpperCase() === nq));
       return hit ? { lat: hit.lat, lon: hit.lon, label: hit.postcode + ' ' + hit.plaats + ' (offline)' } : null;
@@ -119,7 +119,7 @@
     render();
   }
 
-  // ---------- Markup (gelijk voor alle ontwerpen) ----------
+  // ---------- Student-page markup ----------
   function markup(meta) {
     const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     return `
@@ -145,22 +145,24 @@
       </select>
       <p id="vanaf-status" class="status" role="status" aria-live="polite"></p>
     </form>
-    <div class="blok">
+    <div class="blok filter-fields">
       <label for="f-postcode">Postcode begint met</label>
-      <input id="f-postcode" placeholder="bijv. 30">
+      <input id="f-postcode" placeholder="bijv. 3011 AA">
       <label for="f-plaats">Plaats</label>
       <input id="f-plaats" placeholder="bijv. Rotterdam">
       <label for="f-semester">Semester</label>
       <select id="f-semester"><option value="">Alle semesters</option></select>
       <label for="f-spec">Specialisatie</label>
       <select id="f-spec"><option value="">Alle specialisaties</option></select>
-      <label for="f-sort">Sorteer op</label>
+      <button type="button" id="wis" class="secundair">Filters wissen</button>
+    </div>
+    <div class="sort-controls">
+      <label for="f-sort">Sorteer resultaten op</label>
       <select id="f-sort">
         <option value="naam">Naam</option>
         <option value="plaats">Plaats</option>
         <option value="afstand">Afstand (eerst afstand-zoeken)</option>
       </select>
-      <button type="button" id="wis" class="secundair">Filters wissen</button>
     </div>
   </aside>
   <section class="resultaten-wrap" aria-label="Resultaten">
@@ -178,7 +180,7 @@
 </footer>`;
   }
 
-  // ---------- Stijlen ----------
+  // ---------- Styles ----------
   const CSS_BASIS = `
 *{box-sizing:border-box}
 body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.45}
@@ -206,18 +208,23 @@ dd{margin:0;overflow-wrap:anywhere}
 @media print{.filters{display:none}}
 `;
 
-  const DESIGNS = {
-    a: {
-      naam: 'A – Kaarten (HR-rood)',
-      css: `
+  const CSS_DESIGN = `
 body{background:#f4f4f4;color:#222}
 .kop{background:#c8102e;color:#fff;padding:2rem 1rem}
 .kop-inner,.layout{max-width:1200px;margin:0 auto}
 .layout{padding:1rem}
-.filters{display:grid;grid-template-columns:1fr 2fr;gap:1rem;background:#fff;padding:1rem;border-radius:10px;box-shadow:0 1px 4px #0002}
-.filters .blok:last-child{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0 1rem;align-items:end}
-.filters .blok:last-child label{grid-row:1}
-.filters .blok:last-child .secundair{grid-row:2;color:#c8102e}
+.filters{max-width:860px;margin:0 auto}
+.vanaf{background:#fff;border-radius:16px;padding:1.25rem;box-shadow:0 6px 24px #c8102e22}
+.vanaf label[for=f-vanaf]{font-size:1.05rem}
+.vanaf input#f-vanaf{font-size:1.15rem;padding:.75rem 1rem;border-radius:99px;min-width:0}
+.vanaf button{border-radius:99px;padding:.75rem 1.5rem}
+.filter-fields{display:flex;flex-wrap:wrap;gap:.5rem;align-items:end;margin:1rem 0}
+.filter-fields label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.filter-fields input,.filter-fields select{width:auto;min-width:0;flex:1 1 140px;border-radius:99px}
+.filter-fields .secundair{margin:0;border-radius:99px;color:#c8102e}
+.sort-controls{display:flex;justify-content:flex-end;align-items:center;flex-wrap:wrap;gap:.5rem;padding:.75rem 0;border-top:1px solid #ccc}
+.sort-controls label{margin:0;white-space:nowrap}
+.sort-controls select{width:auto;max-width:100%;background:#fff}
 button{background:#c8102e;color:#fff}
 .aantal{font-weight:600;margin:1.25rem 0 .5rem}
 .resultaten{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
@@ -227,68 +234,12 @@ button{background:#c8102e;color:#fff}
 .chip{background:#fde8eb;color:#8a0b20}
 a{color:#a30d26}
 .contact{background:#222;color:#fff}.contact a{color:#ffb3bf}
-@media(max-width:800px){.filters{grid-template-columns:1fr}.filters .blok:last-child{display:block}}
-`,
-    },
-    b: {
-      naam: 'B – Compacte lijst met zijbalk',
-      css: `
-body{background:#fff;color:#1b1f24}
-.kop{background:#1b1f24;color:#fff;padding:1rem 1.5rem}
-.kop h1{font-size:1.4rem}.kop p{margin:.2rem 0 0;opacity:.75;font-size:.9rem}
-.layout{display:grid;grid-template-columns:280px 1fr;min-height:70vh}
-.filters{background:#f1f3f5;padding:1rem 1.25rem;border-right:1px solid #dde1e5}
-.vanaf{padding-bottom:1rem;border-bottom:1px solid #dde1e5}
-button{background:#0b6bcb;color:#fff}.secundair{color:#0b6bcb}
-.resultaten-wrap{padding:1rem 1.5rem}
-.aantal{margin:0 0 .5rem;font-size:.9rem;color:#555}
-.item{display:grid;grid-template-columns:minmax(200px,1.2fr) 3fr;gap:1rem;padding:.75rem 0;border-bottom:1px solid #e5e7ea}
-.item-kop{flex-direction:column;gap:.2rem;grid-column:1;grid-row:1}
-.locatie{grid-column:1;grid-row:2;font-size:.9rem}
-.item h3{font-size:1rem}
-.item dl{grid-column:2;grid-row:1/3;grid-template-columns:repeat(5,auto 1fr);margin:0;font-size:.85rem}
-.afstand{background:#e7f1fb;color:#0b4f96}
-.chip{background:#eceff2}
-a{color:#0b6bcb}
-.contact{border-top:1px solid #dde1e5;background:#f1f3f5}
-@media(max-width:1100px){.item dl{grid-template-columns:auto 1fr}}
-@media(max-width:800px){.layout{grid-template-columns:1fr}.filters{border-right:0}.item{grid-template-columns:1fr}.item-kop,.locatie,.item dl{grid-column:1;grid-row:auto}}
-`,
-    },
-    c: {
-      naam: 'C – Zoekmachine (licht, groot zoekveld)',
-      css: `
-body{background:linear-gradient(#eef6f3,#fff 400px);color:#173430}
-.kop{text-align:center;padding:3rem 1rem 1rem}
-.kop h1{font-size:2.2rem;color:#0f6b5c}
-.layout{max-width:860px;margin:0 auto;padding:0 1rem}
-.vanaf{background:#fff;border-radius:16px;padding:1.25rem;box-shadow:0 6px 24px #0f6b5c22}
-.vanaf label[for=f-vanaf]{font-size:1.05rem}
-.vanaf input#f-vanaf{font-size:1.15rem;padding:.75rem 1rem;border-radius:99px}
-.vanaf button{border-radius:99px;padding:.75rem 1.5rem}
-.filters .blok:last-child{display:flex;flex-wrap:wrap;gap:.5rem;align-items:end;margin:1rem 0}
-.filters .blok:last-child label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-.filters .blok:last-child input,.filters .blok:last-child select{width:auto;flex:1 1 140px;border-radius:99px}
-.filters .blok:last-child .secundair{margin:0;border-radius:99px}
-button{background:#0f6b5c;color:#fff}.secundair{color:#0f6b5c}
-.aantal{color:#4a6a65;font-size:.9rem}
-.resultaten{display:flex;flex-direction:column;gap:.75rem}
-.item{background:#fff;border:1px solid #d6e7e2;border-radius:14px;padding:1rem 1.25rem}
-.item h3{font-size:1.15rem;color:#0f6b5c}
-.item dl{grid-template-columns:repeat(2,auto 1fr)}
-.afstand{background:#0f6b5c;color:#fff;font-size:1rem;padding:.25rem .75rem}
-.chip{background:#dff0eb;color:#0f6b5c}
-a{color:#0f6b5c}
-.contact{margin-top:2rem;background:#0f6b5c;color:#fff}.contact a{color:#d5fff5}
-@media(max-width:640px){.item dl{grid-template-columns:auto 1fr}}
-`,
-    },
-  };
+@media(max-width:400px){.resultaten{grid-template-columns:minmax(0,1fr)}}
+`;
 
-  function build(data, designKey, meta) {
-    const design = DESIGNS[designKey] || DESIGNS.a;
+  function build(data, meta) {
     meta = Object.assign({ titel: 'Stageplaatsen', datum: new Date().toLocaleDateString('nl-NL') }, meta);
-    // '<' escapen zodat data nooit uit het <script>-blok kan breken.
+    // Escape '<' so embedded data cannot break out of the script element.
     const json = JSON.stringify(data).replace(/</g, '\\u003c');
     return `<!doctype html>
 <html lang="nl">
@@ -296,9 +247,9 @@ a{color:#0f6b5c}
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${meta.titel.replace(/</g, '&lt;')}</title>
-<style>${CSS_BASIS}${design.css}</style>
+<style>${CSS_BASIS}${CSS_DESIGN}</style>
 </head>
-<body class="ontwerp-${designKey}">
+<body class="ontwerp-a">
 ${markup(meta)}
 <script id="stage-data" type="application/json">${json}<\/script>
 <script>(${app.toString()})();<\/script>
@@ -307,6 +258,6 @@ ${markup(meta)}
 `;
   }
 
-  root.StudentPage = { build, DESIGNS, BEHEERDER };
+  root.StudentPage = { build, BEHEERDER };
   if (typeof module !== 'undefined') module.exports = root.StudentPage;
 })(typeof window !== 'undefined' ? window : globalThis);

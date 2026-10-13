@@ -1,0 +1,31 @@
+# Run with prek; Node.js is required for the local JavaScript hooks.
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-json
+      - id: check-yaml
+      - id: check-merge-conflict
+      - id: check-added-large-files
+      - id: detect-private-key
+
+  - repo: local
+    hooks:
+      - id: javascript-syntax
+        name: Check JavaScript syntax
+        # node --check accepts one file at a time.
+        entry: >-
+          node -e "for (const file of process.argv.slice(1))
+          require('node:child_process').execFileSync(process.execPath,
+          ['--check', file], {stdio: 'inherit'})"
+        language: system
+        types: [javascript]
+
+      - id: student-page-tests
+        name: Test student-page export
+        entry: node --test tests/student-page.test.js
+        language: system
+        files: '\.(html|js|json)$'
+        pass_filenames: false

@@ -34,10 +34,18 @@ body{background:#f4f4f4;color:#222}
 .kop{background:#c8102e;color:#fff;padding:2rem 1rem}
 .kop-inner,.layout{max-width:1200px;margin:0 auto}
 .layout{padding:1rem}
-.filters{display:grid;grid-template-columns:1fr 2fr;gap:1rem;background:#fff;padding:1rem;border-radius:10px;box-shadow:0 1px 4px #0002}
-.filters .blok:last-child{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:0 1rem;align-items:end}
-.filters .blok:last-child label{grid-row:1}
-.filters .blok:last-child .secundair{grid-row:2;color:#c8102e}
+.filters{max-width:860px;margin:0 auto}
+.vanaf{background:#fff;border-radius:16px;padding:1.25rem;box-shadow:0 6px 24px #c8102e22}
+.vanaf label[for=f-vanaf]{font-size:1.05rem}
+.vanaf input#f-vanaf{font-size:1.15rem;padding:.75rem 1rem;border-radius:99px;min-width:0}
+.vanaf button{border-radius:99px;padding:.75rem 1.5rem}
+.filter-fields{display:flex;flex-wrap:wrap;gap:.5rem;align-items:end;margin:1rem 0}
+.filter-fields label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.filter-fields input,.filter-fields select{width:auto;min-width:0;flex:1 1 140px;border-radius:99px}
+.filter-fields .secundair{margin:0;border-radius:99px;color:#c8102e}
+.sort-controls{display:flex;justify-content:flex-end;align-items:center;flex-wrap:wrap;gap:.5rem;padding:.75rem 0;border-top:1px solid #ccc}
+.sort-controls label{margin:0;white-space:nowrap}
+.sort-controls select{width:auto;max-width:100%;background:#fff}
 button{background:#c8102e;color:#fff}
 .aantal{font-weight:600;margin:1.25rem 0 .5rem}
 .resultaten{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
@@ -47,7 +55,7 @@ button{background:#c8102e;color:#fff}
 .chip{background:#fde8eb;color:#8a0b20}
 a{color:#a30d26}
 .contact{background:#222;color:#fff}.contact a{color:#ffb3bf}
-@media(max-width:800px){.filters{grid-template-columns:1fr}.filters .blok:last-child{display:block}}
+@media(max-width:400px){.resultaten{grid-template-columns:minmax(0,1fr)}}
 </style>
 </head>
 <body class="ontwerp-a">
@@ -74,22 +82,24 @@ a{color:#a30d26}
       </select>
       <p id="vanaf-status" class="status" role="status" aria-live="polite"></p>
     </form>
-    <div class="blok">
+    <div class="blok filter-fields">
       <label for="f-postcode">Postcode begint met</label>
-      <input id="f-postcode" placeholder="bijv. 30">
+      <input id="f-postcode" placeholder="bijv. 3011 AA">
       <label for="f-plaats">Plaats</label>
       <input id="f-plaats" placeholder="bijv. Rotterdam">
       <label for="f-semester">Semester</label>
       <select id="f-semester"><option value="">Alle semesters</option></select>
       <label for="f-spec">Specialisatie</label>
       <select id="f-spec"><option value="">Alle specialisaties</option></select>
-      <label for="f-sort">Sorteer op</label>
+      <button type="button" id="wis" class="secundair">Filters wissen</button>
+    </div>
+    <div class="sort-controls">
+      <label for="f-sort">Sorteer resultaten op</label>
       <select id="f-sort">
         <option value="naam">Naam</option>
         <option value="plaats">Plaats</option>
         <option value="afstand">Afstand (eerst afstand-zoeken)</option>
       </select>
-      <button type="button" id="wis" class="secundair">Filters wissen</button>
     </div>
   </aside>
   <section class="resultaten-wrap" aria-label="Resultaten">

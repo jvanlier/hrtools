@@ -26,7 +26,6 @@ td.acties button{padding:.2rem .5rem;font-size:.8rem}
 .warn{color:#b35c00}
 #melding{min-height:1.3em;font-size:.9rem;margin:.5rem 0 0}
 .balk{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-bottom:.75rem}
-.balk select{width:auto}
 .tabel-wrap{max-height:70vh;overflow:auto}
 :focus-visible{outline:3px solid #ffbf00;outline-offset:2px}
 @media(max-width:900px){main{grid-template-columns:1fr}}
@@ -72,8 +71,6 @@ td.acties button{padding:.2rem .5rem;font-size:.8rem}
       <button type="button" class="sec" id="json-save">JSON opslaan</button>
       <button type="button" class="sec" id="geo">Ontbrekende locaties ophalen</button>
       <span style="flex:1"></span>
-      <label for="ontwerp" style="margin:0">Ontwerp</label>
-      <select id="ontwerp"></select>
       <button type="button" class="sec" id="voorbeeld">Voorbeeld</button>
       <button type="button" id="export">Studentenpagina exporteren</button>
     </div>
@@ -109,7 +106,7 @@ async function geocode(d) {
     const doc = (await res.json()).response.docs[0];
     const m = doc && /POINT\(([\d.]+) ([\d.]+)\)/.exec(doc.centroide_ll);
     if (m) { d.lon = +m[1]; d.lat = +m[2]; return true; }
-  } catch (e) { console.warn('Locatie ophalen mislukt', e); }
+  } catch (e) { console.warn('Location lookup failed', e); }
   return false;
 }
 
@@ -144,7 +141,7 @@ $('#form').addEventListener('submit', async (e) => {
   const id = $('#id').value;
   const oud = data.find((x) => x.id === id);
   d.id = id || (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()));
-  // Coördinaten hergebruiken als de locatie niet is gewijzigd.
+  // Reuse coordinates when the location has not changed.
   if (oud && oud.postcode === d.postcode && oud.plaats === d.plaats && oud.lat != null) { d.lat = oud.lat; d.lon = oud.lon; }
   else { melding('Locatie ophalen…'); await geocode(d); }
   if (oud) data[data.indexOf(oud)] = d; else data.push(d);
@@ -200,8 +197,7 @@ $('#geo').addEventListener('click', async () => {
   bewaar(); render(); melding(`${ok} van ${todo.length} ontbrekende locaties gevonden.`);
 });
 
-Object.entries(StudentPage.DESIGNS).forEach(([k, v]) => $('#ontwerp').add(new Option(v.naam, k)));
-const studentHtml = () => StudentPage.build(data.map(({ id, ...rest }) => rest), $('#ontwerp').value);
+const studentHtml = () => StudentPage.build(data.map(({ id, ...rest }) => rest));
 $('#export').addEventListener('click', () => {
   const zonder = data.filter((d) => d.lat == null).length;
   if (zonder && !confirm(`${zonder} stageplaats(en) hebben geen locatie en verschijnen niet bij zoeken op afstand. Toch exporteren?`)) return;
