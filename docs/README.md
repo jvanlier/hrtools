@@ -20,6 +20,7 @@ Each guide is self-contained, works offline, and can be printed or shared separa
 - **`admin.html`**: add, edit, and delete placements. Records are saved automatically in browser localStorage. **JSON opslaan** downloads a JSON file; **JSON openen** loads one. **Studentenpagina exporteren** exports a standalone HTML file containing data, JS, and CSS. Both preview and export use the selected card layout; there is no design picker.
 - **`student.js`**: the existing student-page builder; keep it alongside `admin.html`.
 - **`data/voorbeeld.json`**: illustrative sample records.
+- **`convert_excel_to_json.py`**: converts the internship placements Excel sheet in `data/` to the tool's JSON format. Run `uv run convert_excel_to_json.py`; it writes `data/stageplaatsen.json` (gitignored) to open in `admin.html` with **JSON openen…**. Records without coordinates are geocoded in the admin page with **Ontbrekende locaties ophalen**.
 
 Students can filter by postcode, city, semester, and specialization, and search/sort by straight-line distance from a postcode or city.
 
@@ -38,7 +39,7 @@ prek install
 prek run --all-files
 ```
 
-`.pre-commit-config.yaml` checks whitespace, final newlines, JSON/YAML syntax, merge conflicts, large files, and private keys. Local hooks check JavaScript syntax and run the student-page tests when HTML, JavaScript, or JSON changes. No npm dependencies or web server are needed. The first run needs internet access to install the standard hooks; JavaScript syntax checks cover `.js` files, not inline scripts in HTML.
+`.pre-commit-config.yaml` checks whitespace, final newlines, JSON/YAML syntax, merge conflicts, large files, and private keys. Python files are formatted and linted with Ruff (rules in `ruff.toml`). Local hooks check JavaScript syntax and run the student-page tests when HTML, JavaScript, or JSON changes. No npm dependencies or web server are needed. The first run needs internet access to install the standard hooks; JavaScript syntax checks cover `.js` files, not inline scripts in HTML.
 
 ## Language convention
 
