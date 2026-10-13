@@ -29,6 +29,17 @@ Location coordinates come from the free PDOK Locatieserver. Internet access is r
 
 From the repository root, run `node --test tests/student-page.test.js` to check the exported layout against the selected mockup, embedded JSON escaping, and the administrator's single-design export path.
 
+## Commit hooks
+
+Install [prek](https://prek.j178.dev/) and Node.js, then run from the repository root:
+
+```sh
+prek install
+prek run --all-files
+```
+
+`.pre-commit-config.yaml` checks whitespace, final newlines, JSON/YAML syntax, merge conflicts, large files, and private keys. Local hooks check JavaScript syntax and run the student-page tests when HTML, JavaScript, or JSON changes. No npm dependencies or web server are needed. The first run needs internet access to install the standard hooks; JavaScript syntax checks cover `.js` files, not inline scripts in HTML.
+
 ## Language convention
 
 Write internal documentation and code comments in English. Keep user-facing content in Dutch.
