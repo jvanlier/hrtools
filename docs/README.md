@@ -1,11 +1,5 @@
 # Internship placement tool
 
-## Selected design
-
-The selected design is **mockup A with C's form layout**. Open [`mockups/ontwerp-a.html`](../mockups/ontwerp-a.html) directly in a browser; no web server is required.
-
-See [`mockups/README.md`](../mockups/README.md) for the design specification and scope. Mockups B and C and the old mockup generator have been removed. The student-page preview and export now use this layout exclusively, including the separate sorting row and full postcode placeholder.
-
 ## User guides
 
 Open [`handleiding/index.html`](handleiding/index.html) to choose between two separate visual Dutch guides:
