@@ -33,12 +33,16 @@
 
     async function geocode(q) {
       q = q.trim();
-      const pc4 = /^\d{4}$/.test(q);
+      // Normalize "3011 CJ" to "3011CJ" so full codes use the exact postcode
+      // query; with the space the API falls back to fuzzy matching and can
+      // return a place on the other side of the country.
+      const compact = q.replace(/\s+/g, '');
+      const postcode = /^\d{4}([a-z]{2})?$/i.test(compact) ? compact.toUpperCase() : null;
       const params = new URLSearchParams({
-        q: pc4 ? 'postcode:' + q + '*' : q,
+        q: postcode ? 'postcode:' + postcode + '*' : compact,
         rows: '1',
         fl: 'weergavenaam,centroide_ll',
-        fq: pc4 ? 'type:postcode' : 'type:(postcode OR woonplaats)',
+        fq: postcode ? 'type:postcode' : 'type:(postcode OR woonplaats)',
       });
       try {
         const res = await fetch('https://api.pdok.nl/bzk/locatieserver/search/v3_1/free?' + params, { signal: AbortSignal.timeout(6000) });
